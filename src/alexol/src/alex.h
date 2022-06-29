@@ -55,7 +55,7 @@ namespace alexol {
 
 template <class T, class P, class Compare = AlexCompare,
           class Alloc = std::allocator<std::pair<T, P>>,
-          bool allow_duplicates = false>
+          bool allow_duplicates = true>
 class Alex {
   static_assert(std::is_arithmetic<T>::value, "ALEX key type must be numeric.");
   static_assert(std::is_same<Compare, AlexCompare>::value,
@@ -114,7 +114,7 @@ public:
   struct DerivedParams {
     // The defaults here assume the default max node size of 16MB
     int max_fanout = 1 << 21; // assumes 8-byte pointers
-    int max_data_node_slots = (1 << 18) / sizeof(V);
+    int max_data_node_slots = (1 << 19) / sizeof(V);
   };
   DerivedParams derived_params_;
 
@@ -1003,7 +1003,6 @@ public:
         values, num_keys, data_node_type::kInitDensity_,
         params_.expected_insert_frac, &root_data_node_model,
         params_.approximate_cost_computation, &stats);
-
     // Recursively bulk load
     bulk_load_node(values, num_keys, root_node_, num_keys,
                    static_cast<double>(min_key), static_cast<double>(max_key),
@@ -1066,6 +1065,7 @@ private:
   void bulk_load_node(const V values[], int num_keys, AlexNode<T, P> *&node,
                       int total_keys, double min_limit, double max_limit,
                       const LinearModel<T> *data_node_model = nullptr) {
+    // std::cout << "Begin: num_keys: " << num_keys << std::endl;
     // T debug_key = 68052112994;
     //  Automatically convert to data node when it is impossible to be better
     //  than current cost
@@ -1195,6 +1195,7 @@ private:
       delete_node(node);
       node = data_node;
     }
+    // std::cout << "End: num_keys: " << num_keys << std::endl;
   }
 
   // Caller needs to set the level, duplication factor, and neighbor pointers of
@@ -1323,14 +1324,14 @@ public:
   // Directly returns a pointer to the payload found through find(key)
   // This avoids the overhead of creating an iterator
   // Returns null pointer if there is no exact match of the key
-  bool get_payload(const T &key, P *payload) const {
+  int get_payload(const T &key, P *payload) const {
     EpochGuard guard;
     do {
       data_node_type *leaf = get_leaf(key);
-      bool found = false;
-      auto ret_flag = leaf->find_payload(key, payload, &found);
+      int num = 0;
+      auto ret_flag = leaf->find_payload(key, payload, num);
       if (ret_flag == true)
-        return found; // ret_flag == true means no concurrency conlict occurs
+        return num; // ret_flag == true means no concurrency conlict occurs
     } while (true);
   }
 
@@ -2634,7 +2635,7 @@ public:
     thread_local int erase_counter(0);
     int old_counter = erase_counter;
     erase_counter = (erase_counter + num_erased) & counterMask;
-    if(old_counter > erase_counter){
+    if (old_counter > erase_counter) {
       SUB(&stats_.num_keys, (1 << 19) - 1);
     }
 
