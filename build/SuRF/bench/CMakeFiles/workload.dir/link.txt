@@ -1,0 +1,1 @@
+/usr/bin/g++-10  -O3 -Wall -march=native -mavx -pthread -std=c++14 -rdynamic CMakeFiles/workload.dir/workload.cpp.o -o workload   -L/data/d0/y21/nsangsiri1/spack/opt/spack/linux-ubuntu18.04-cascadelake/gcc-10.3.0/googletest-1.10.0-psa5cl3jkyuzr73mn2fwjyx2hngist6o/lib 

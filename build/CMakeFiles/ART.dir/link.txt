@@ -1,0 +1,2 @@
+/usr/bin/ar qc libART.a CMakeFiles/ART.dir/ART/src/Tree.cpp.o
+/usr/bin/ranlib libART.a
