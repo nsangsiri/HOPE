@@ -7,8 +7,8 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Wall -Werror -march=native -mavx -pthread -std=c++14")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -Wall -Werror -march=native -mavx -pthread -std=c++14")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Wall -march=native -mavx -pthread -std=c++14")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -Wall -march=native -mavx -pthread -std=c++14")
 
 #option(COVERALLS "Generate coveralls data" ON)
 
@@ -25,6 +25,8 @@ endif()
 enable_testing()
 
 include_directories("/usr/local/include")
+include_directories("/data/d0/y21/nsangsiri1/spack/opt/spack/linux-ubuntu18.04-cascadelake/gcc-10.3.0/googletest-1.10.0-psa5cl3jkyuzr73mn2fwjyx2hngist6o/include")
+link_directories("/data/d0/y21/nsangsiri1/spack/opt/spack/linux-ubuntu18.04-cascadelake/gcc-10.3.0/googletest-1.10.0-psa5cl3jkyuzr73mn2fwjyx2hngist6o/lib")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/symbol_selectors")
