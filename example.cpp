@@ -2,8 +2,8 @@
 
 int main() {
     static const int kEncoderType = 3; // 3-grams Encoder
-    static const char kKeyFilePath[] = "../datasets/words.txt";
-    static const int kNumKeys = 234369;
+    static const char kKeyFilePath[] = "../datasets/wikis.txt";
+    static const int kNumKeys = 14000;
 
     // load input key list
     // this input key list is already sorted
@@ -35,21 +35,23 @@ int main() {
     // compress all keys
     std::vector<std::string> enc_keys;
     int64_t total_enc_len = 0;
-    uint8_t *buffer = new uint8_t[1024];
+    uint8_t *buffer = new uint8_t[1024 * 16];
     for (int i = 0; i < (int)keys.size(); i++) {
 	int bit_len = encoder->encode(keys[i], buffer);
 	total_enc_len += bit_len;
 	enc_keys.push_back(std::string((const char *)buffer, (bit_len + 7) / 8));
+	std::cout << std::string((const char *)buffer, 8) << std::endl ;
     }
 
     double cpr_rate =  total_key_len / (total_enc_len + 0.0);
-    std::cout << "Compression Rate = " << cpr_rate << std::endl;
+    //std::cout << "Compression Rate = " << cpr_rate << std::endl;
 
     // verify the order-preserving property of HOPE
+    //std::cout << (int)keys.size() << std::endl ;
     for (int i = 0; i < (int)keys.size() - 1; i++) {
 	int cmp = enc_keys[i].compare(enc_keys[i + 1]);
 	if (cmp >= 0) {
-	    std::cout << "Order-Preserving property violated!" << std::endl;
+	    std::cout << i << "<--  Order-Preserving property violated!" << std::endl;
 	    return -1;
 	}
     }
