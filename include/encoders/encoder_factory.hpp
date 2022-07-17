@@ -3,7 +3,7 @@
 
 #include "ALMImproved_encoder.hpp"
 #include "double_char_encoder.hpp"
-#include "encoder.hpp"
+#include "../encoder.hpp"
 #include "ALM_encoder.hpp"
 #include "ngram_encoder.hpp"
 #include "single_char_encoder.hpp"
