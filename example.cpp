@@ -40,7 +40,7 @@ int main() {
 	int bit_len = encoder->encode(keys[i], buffer);
 	total_enc_len += bit_len;
 	enc_keys.push_back(std::string((const char *)buffer, (bit_len + 7) / 8));
-	std::cout << std::string((const char *)buffer, 8) << std::endl ;
+	std::cout << std::string((const char *)buffer, 8) ;
     }
 
     double cpr_rate =  total_key_len / (total_enc_len + 0.0);
